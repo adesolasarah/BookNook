@@ -112,7 +112,7 @@ function BookResults() {
               key={book.key || index}
               to={`/book/${encodeURIComponent(book.key)}`}
               state={{ book }}
-              className="bg-white rounded-lg shadow-md hover: shadow-xl transition-shadow duration-300 overflow-hidden"
+              className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
             >
               <img
                 src={getCoverUrl(book)}

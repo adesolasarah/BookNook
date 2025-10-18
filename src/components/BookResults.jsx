@@ -6,9 +6,11 @@ function BookResults() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchParams] = useSearchParams();
-  const query = searchParams.get("q") || "bestsellers";
+  const query = searchParams.get("q");
 
   useEffect(() => {
+    if (!query) return;
+
     setLoading(true);
     setError(null);
 
@@ -27,7 +29,6 @@ function BookResults() {
       })
       .catch((error) => {
         console.error("Error fetching books:", error);
-
         setError("Failed to load books. Please try again.");
         setLoading(false);
       });
@@ -75,36 +76,69 @@ function BookResults() {
           <p className="text-gray-600 mt-1">Found {books.length} books</p>
         )}
       </div>
-      {/* Loading */}
+      {/* Loading State */}
       {loading && (
-        <div className="flex justify-center items-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900"></div>
+        <div className="flex flex-col justify-center items-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mb-4"></div>
+          <p className="text-gray-600 text-lg">Searching for books...</p>
         </div>
       )}
 
-      {/* Error */}
+      {/* Error State */}
       {error && (
         <div className="max-w-7xl mx-auto bg-red-50 border border-red-200 rounderd-lg p-4 text-shadow-red-700">
-          {error}
+          <svg
+            className="w-6 h-6 text-red-600 flex-shrink-0 mt-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <div>
+            <h3 className="font-semibold text-red-900 mb-1">Error</h3>
+            <p className="text-red-700">{error}</p>
+          </div>
         </div>
       )}
 
       {/* No results */}
       {!loading && !error && books.length === 0 && (
         <div className="text-center py-20">
-          <p className="text-xl text-gray-600">
-            No books found. Try a different search.
+          <svg
+            className="w-16 h-16 mx-auto text-gray-300 mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+            />
+          </svg>
+          <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+            No books found
+          </h3>
+          <p className="text-gray-600 mb-4">
+            Try searching with different keywords
           </p>
           <Link
             to="/"
-            className="text-blue-900 hover:underline mt-4 inline-block"
+            className="text-blue-900 hover:underline font-medium"
           >
             Back to Search
           </Link>
         </div>
       )}
 
-      {/* Book Grid - Using API data*/}
+      {/* Book Grid */}
       {!loading && !error && books.length > 0 && (
         <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
           {books.map((book, index) => (

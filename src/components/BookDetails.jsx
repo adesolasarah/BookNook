@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useLocation, Link } from "react-router-dom";
+import { useFavorites } from "../hooks/useFavorites";
 
 function BookDetails() {
   const [book, setBook] = useState(null);
@@ -7,6 +8,9 @@ function BookDetails() {
   const [error, setError] = useState(null);
   const { id } = useParams();
   const location = useLocation();
+
+  //Favorites hook
+  const { addFavorite, removeFavorite, isFavorite } = useFavorites();
 
   useEffect(() => {
     // Try to get book from navigation state first (faster)
@@ -44,6 +48,17 @@ function BookDetails() {
       return `https://covers.openlibrary.org/b/id/${book.covers[0]}-L.jpg`;
     }
     return "https://via.placeholder.com/300x450?text=No+Cover";
+  };
+
+  //Handle save/unsave
+  const handleSave = () => {
+    if (book) {
+      if (isFavorite(book.key)) {
+        removeFavorite(book.key);
+      } else {
+        addFavorite(book);
+      }
+    }
   };
 
   //Loading state
@@ -86,6 +101,8 @@ function BookDetails() {
       </div>
     );
   }
+
+  const bookIsFavorite = isFavorite(book.key);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
@@ -256,12 +273,17 @@ function BookDetails() {
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-3">
-              <button className="flex-1 py-2 sm:py-3 px-6 border-2 border-blue-900 text-blue-900 rounded-lg font-semibold hover:bg-blue-50 transition">
-                Save
+              <button
+                onClick={handleSave}
+                className={`flex-1 py-2 sm:py-3 px-6 border-2 rounded-lg font-semibold transition ${
+                  bookIsFavorite
+                    ? "bg-blue-900 text-white border-blue-900 hover:bg-blue-800"
+                    : "border-blue-900 text-blue-900 hover:bg-blue-50"
+                }`}
+              >
+                {bookIsFavorite ? "✓ Saved" : "Save"}
               </button>
-              <button className="flex-1 py-2 sm:py-3 px-6 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition">
-                Read more
-              </button>
+              <a href={`https://openlibrary.org${book.key}`} target="_blank" rel="noopener noreferrer" className="flex-1 py-2 sm:py-3 px-6 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition text-center">Read More</a>
             </div>
           </div>
         </div>

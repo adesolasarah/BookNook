@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function SearchBox() {
   const [searchQuery, setSearchQuery] = useState();
@@ -35,7 +35,6 @@ function SearchBox() {
           <p className="text-gray-600 text-center mb-4 sm:mb-6 text-base sm:text-lg">
             Find your next favorite read
           </p>
-
           <div className="relative">
             <input
               type="text"
@@ -65,6 +64,13 @@ function SearchBox() {
               </svg>
             </button>
           </div>
+
+          <Link
+            to="/favorites"
+            className="mt-4 text-blue-900 hover:text-blue-700 font-medium text-center block"
+          >
+            View My Favorites →
+          </Link>
         </div>
       </div>
     </div>
